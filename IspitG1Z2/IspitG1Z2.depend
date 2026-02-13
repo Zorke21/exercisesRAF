@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1771006720 source:c:\users\luka\documents\github\exercisesraf\ispitg1z2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
