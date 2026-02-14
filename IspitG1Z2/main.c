@@ -23,6 +23,9 @@ char* stringEntry(){
     str[size] = '\0';
     return str;
 }
+char* stringShift();
+
+
 char toUpper(char c){
     if(c>='a' && c<='z')
         return c - ('a' - 'A');
@@ -33,44 +36,11 @@ int main()
 
     char *str = stringEntry();
     char before = '\0';
-    int counter = 1;
-    int i = 0,state = 0,j=0,iHelp; // 0 - nije jos nadjen rastuci 1 - prvi je nadjen preskaci
+    int i = 0,write=0,wordStart = 0,wordEnd = 0,streak=1,maxstreak=1,streakStart=0;
     while(str[i]){
-        if(before == '\0'){
-            before = str[i];
-            i++;
-            continue;
+        if(before == '\0' || before == ' '){
+
         }
-        if(str[i] == ' ' || str[i] == '\0'){
-            for(int k = 0; k < j; k++){
-                putchar(str[iHelp+k]);
-            }
-            putchar(' ');
-            j = 0;
-            iHelp = 0;
-            before = ' ';
-            counter = 1;
-            state = 0;
-            i++;
-            continue;
-        }
-        if((str[i] >= 'A' && str[i] <='Z') || (str[i] >= 'a' && str[i] <='z')){
-            if((toUpper(str[i]) > toUpper(before))){
-                counter++;
-            }else{
-                if(j<counter){
-                    j = counter;
-                    iHelp = i;
-                }
-                counter = 1;
-            }
-        }else{
-            i++;
-            counter = 1;
-            continue;
-        }
-        before = str[i];
-        i++;
     }
     free(str);
     return 0;
