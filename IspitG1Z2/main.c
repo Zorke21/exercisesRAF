@@ -19,29 +19,65 @@ char* stringEntry(){
 
 
     }
-
     str[size] = '\0';
     return str;
 }
-char* stringShift();
-
-
 char toUpper(char c){
     if(c>='a' && c<='z')
         return c - ('a' - 'A');
     return c;
 }
+void wordStreak(char *str,int start,int end,int *w){
+    int streak = 1,maxStreak = 1,streakStart = start;
+    char before = '\0';
+    for(int i = start + 1;i<=end;i++){
+        before = str[i-1];
+        if(before == '\0'){
+            before = str[i];
+            continue;
+        }
+        if((str[i]>='A' && str[i]<='Z') || (str[i]>='a' && str[i]<='z')){
+            if(toUpper(str[i]) > toUpper(before)){
+                streak++;
+            }
+            else{
+                if(streak > maxStreak){
+                maxStreak = streak;
+                streakStart = i - streak;
+                }
+                streak = 1;
+            }
+
+
+        }
+    }
+    if(streak >  maxStreak){
+                    maxStreak = streak;
+                    streakStart = end - streak + 1;
+                }
+
+    for(int i = streakStart;i < streakStart + maxStreak; i++){
+        str[(*w)++] = str[i];
+    }
+    str[(*w)++] = ' ';
+}
 int main()
 {
 
     char *str = stringEntry();
-    char before = '\0';
-    int i = 0,write=0,wordStart = 0,wordEnd = 0,streak=1,maxstreak=1,streakStart=0;
+    int i = 0,wordStart = 0,wordEnd = 0,w;
+    int *w = 0;
     while(str[i]){
-        if(before == '\0' || before == ' '){
-
+        if(str[i] == ' ' || str[i] == '\0'){
+            wordEnd = i-1;
+            wordStreak(str,wordStart,wordEnd,w);
+            wordStart = i+1;
         }
+        i++;
     }
+    wordEnd = i - 1;
+    wordStreak(str,wordStart,wordEnd,w);
+    printf("%s",str);
     free(str);
     return 0;
 }
