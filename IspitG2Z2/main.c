@@ -5,7 +5,6 @@ char* stringEntry(){
     int size = 0, capacity = 10;
     char *str = malloc(capacity);
     if(!str) return NULL;
-
     int c;
     while((c = getchar()) != '\n' && c != EOF){
         str[size++] = c;
@@ -28,18 +27,26 @@ char toUpper(char c){
     return c;
 }
 int Hex(char c){
-    if(toUpper(c)>='A' && toUpper(c)>='F'){
+    if(toUpper(c)>='A' && toUpper(c)<='F'){
         return toUpper(c) - 55;
     }else if(c>='0' && c<='9'){
         return c - '0';
     }
     return 17;
 }
-void write(char *str,int *w);
+void write(char *str,int *w,int streakStart,int streak){
+    int  i = 0;
+    while(i < streak ){
+        str[*w] = str[streakStart+i];
+        (*w)++;
+        i++;
+    }
+    str[(*w)++] = ' ';
+}
 void iterate(char *str,int start,int end,int *w){
-    int wordStart=0,wordEnd=0,i = start+1,before = str[start],streak,maxStreak = 0,streakStart = 0;
+    int wordStart=0,wordEnd=0,i = start+1,before = str[start],streak = 1,maxStreak = 0,streakStart = 0;
     while(i != end){
-        if(Hex(before) > Hex(str[i])){
+        if((Hex(before) > Hex(str[i])) && Hex(before) != 17 && Hex(str[i])!= 17){
             streak++;
         }else{
             if(streak > maxStreak){
@@ -55,15 +62,15 @@ void iterate(char *str,int start,int end,int *w){
                 maxStreak = streak;
                 streakStart = i - streak;
     }
-    if(maxStreak >= 2)
-        printf("streak start - %d, maxStreak - %d ", streakStart, maxStreak );
-        //write(str,w);
+    if(maxStreak >= 2){
+        write(str,w,streakStart,maxStreak);
+    }
 }
 int main(){
-    //char *str = stringEntry();
-    char *str = "a3bc9 fedcba hello 9C4x xyz\0";
-    int i=0, wordStart = 0, wordEnd = 0,write = 0,*w;
-    *w = write;
+    char *str = stringEntry();
+    //char *str = "a3bc9 fedcba hello 9C4x xyz\0";
+    int i=0, wordStart = 0, wordEnd = 0,write = 0;
+    int *w = &write;
     while(str[i]){
         if(str[i] == ' '){
             wordEnd = i;
@@ -74,6 +81,14 @@ int main(){
     }
     wordEnd = i-1;
     iterate(str,wordStart,wordEnd,w);
+
+    char *temp = realloc(str,(*w));
+    if(!temp){
+        free(str);
+        return 1;
+    }
+    temp[*w] = '\0';
+    str = temp;
     printf("%s",str);
     free(str);
     return 0;
